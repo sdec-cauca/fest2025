@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación Completa - Feria 2025</title>
+    
+    <!-- 1. Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    colors: { glass: "rgba(255, 255, 255, 0.1)" }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 2. Librerías -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        body, div, section, h1, h2, h3, p, i, li, span, table, th, td, input {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Estilos Glassmorphism */
+        .card-section {
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(203, 213, 225, 0.5);
+            overflow: hidden;
+        }
+        .dark .card-section {
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Tabs */
+        .tab-btn { transition: all 0.3s ease; border-bottom: 4px solid transparent; opacity: 0.6; }
+        .tab-btn:hover { opacity: 1; }
+        .tab-btn.active {
+            color: #2563eb; border-bottom-color: #2563eb; opacity: 1;
+        }
+        .dark .tab-btn.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+
+        /* Input Buscador */
+        .search-input:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Tablas */
+        .schedule-table th { letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.75rem; }
+        .schedule-table td { font-size: 0.85rem; vertical-align: middle; padding: 0.8rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .dark .schedule-table td { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Filas alternas sutiles */
+        .schedule-table tbody tr:hover { background-color: rgba(0, 0, 0, 0.02); }
+        .dark .schedule-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.05); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200 pb-24 min-h-screen">
+
+    <!-- BOTONES FLOTANTES -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3" data-html2canvas-ignore="true">
+        <button onclick="openModal('rolesModal')" class="bg-rose-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform border border-rose-400 flex items-center justify-center group" title="Ver Roles">
+            <i class="fa-solid fa-users-gear text-xl"></i>
+        </button>
+        <button onclick="downloadSchedule()" class="bg-emerald-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform border border-emerald-400 flex items-center justify-center group" title="Descargar Imagen">
+            <i class="fa-solid fa-camera text-xl"></i>
+        </button>
+        <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-yellow-400 p-4 rounded-full shadow-xl hover:scale-110 transition-transform border border-slate-300 dark:border-slate-600">
+            <i id="theme-icon" class="fa-solid fa-moon"></i>
+        </button>
+        <a href="index.html" class="bg-slate-800 dark:bg-blue-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform hover:bg-black dark:hover:bg-blue-500">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    </div>
+
+    <!-- HEADER -->
+    <header class="bg-slate-900 dark:bg-black text-white py-10 px-4 shadow-md sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div class="bg-gradient-to-br from-purple-600 to-blue-600 p-4 rounded-xl shadow-lg">
+                <i class="fa-solid fa-calendar-days text-3xl text-white"></i>
+            </div>
+            <div class="flex-1 w-full">
+                <h1 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-2">Programación de Personal</h1>
+                
+                <!-- BUSCADOR -->
+                <div class="relative max-w-lg mx-auto md:mx-0 mt-4">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                    </div>
+                    <input type="text" id="globalSearch" onkeyup="handleSearch(event)" 
+                        class="search-input block w-full pl-10 pr-12 py-3 border-none rounded-full text-slate-800 bg-white/90 focus:bg-white placeholder-slate-500 shadow-lg font-semibold" 
+                        placeholder="Busca tu nombre (ej: Juan)...">
+                    <button onclick="searchPerson()" class="absolute inset-y-0 right-0 pr-2 flex items-center">
+                        <div class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 w-8 h-8 flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+        <!-- TABS -->
+        <div class="flex justify-center mb-8 border-b border-slate-300 dark:border-slate-700">
+            <button onclick="showTab('viernes')" id="tab-viernes" class="tab-btn active px-8 py-4 text-lg font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white w-1/2 md:w-auto">
+                VIERNES 21
+            </button>
+            <button onclick="showTab('sabado')" id="tab-sabado" class="tab-btn px-8 py-4 text-lg font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white w-1/2 md:w-auto">
+                SÁBADO 22
+            </button>
+        </div>
+
+        <!-- CONTENEDOR CAPTURABLE -->
+        <div id="capture-area" class="bg-slate-50 dark:bg-slate-900 p-2 rounded-xl">
+
+            <!-- TAB: VIERNES 21 -->
+            <div id="content-viernes" class="tab-content fade-in">
+                
+                <!-- MAÑANA -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-blue-500">
+                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase flex items-center gap-2">
+                            <i class="fa-regular fa-sun"></i> Mañana (8:00 AM - 12:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Mañana">
+                                <!-- COLORES INTERCALADOS EN MODO OSCURO -->
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- TARDE -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-orange-500">
+                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase flex items-center gap-2">
+                            <i class="fa-regular fa-clock"></i> Tarde (12:00 PM - 5:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Tarde">
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- NOCHE -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-indigo-500">
+                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-moon"></i> Noche (5:00 PM - 10:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Noche">
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB: SÁBADO 22 -->
+            <div id="content-sabado" class="tab-content hidden fade-in">
+                
+                <!-- MAÑANA -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-blue-500">
+                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase flex items-center gap-2">
+                            <i class="fa-regular fa-sun"></i> Mañana (8:00 AM - 12:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Mañana">
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- TARDE -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-orange-500">
+                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase flex items-center gap-2">
+                            <i class="fa-regular fa-clock"></i> Tarde (12:00 PM - 5:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Tarde">
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- NOCHE -->
+                <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-indigo-500">
+                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-moon"></i> Noche (5:00 PM - 10:00 PM)
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left schedule-table">
+                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Noche">
+                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL: RESULTADOS -->
+    <div id="searchModal" class="fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="bg-blue-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-search mr-2"></i> Resultados</h3>
+                <button onclick="closeModal('searchModal')" class="hover:bg-blue-700 rounded-full w-8 h-8 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 max-h-[60vh] overflow-y-auto" id="searchResultsList"></div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700 text-center">
+                <button onclick="closeModal('searchModal')" class="text-blue-600 font-bold text-sm">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ROLES -->
+    <div id="rolesModal" class="fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-2xl rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="bg-rose-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-users-gear mr-2"></i> Descripción de Roles</h3>
+                <button onclick="closeModal('rolesModal')" class="hover:bg-rose-700 rounded-full w-8 h-8 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto space-y-4">
+                <div class="border-l-4 border-blue-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
+                    <h4 class="font-bold text-blue-700 dark:text-blue-300 text-sm uppercase">Impulsador Externo</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Atraer activamente al público hacia el evento en puntos de ingreso.</p>
+                </div>
+                <div class="border-l-4 border-emerald-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
+                    <h4 class="font-bold text-emerald-700 dark:text-emerald-300 text-sm uppercase">Impulsador Interno / Logística</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Atención al público, promoción de stands y limpieza.</p>
+                </div>
+                <div class="border-l-4 border-violet-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
+                    <h4 class="font-bold text-violet-700 dark:text-violet-300 text-sm uppercase">Protocolo / Tarima</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Manejo de agenda, artistas e invitados especiales.</p>
+                </div>
+                <div class="border-l-4 border-red-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
+                    <h4 class="font-bold text-red-700 dark:text-red-300 text-sm uppercase">Seguridad</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Control de evacuación y PMU.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            Swal.fire({
+                title: 'Aviso Importante',
+                text: 'Si el horario asignado no es de su conformidad, por favor coordine su reemplazo internamente.',
+                icon: 'info',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#2563eb',
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
+                color: document.documentElement.classList.contains('dark') ? '#fff' : '#334155'
+            });
+            checkTheme();
+        });
+
+        // --- BUSCADOR ---
+        function handleSearch(e) { if(e.key === 'Enter') searchPerson(); }
+
+        function searchPerson() {
+            const query = document.getElementById('globalSearch').value.trim().toLowerCase();
+            if(!query) return;
+
+            const rows = document.querySelectorAll('.search-scope tr');
+            const results = [];
+
+            rows.forEach(row => {
+                const zona = row.children[0].textContent;
+                const encargadosCell = row.querySelector('.person-name').textContent;
+                const parentBody = row.parentElement;
+                const day = parentBody.getAttribute('data-day');
+                const shift = parentBody.getAttribute('data-shift');
+
+                const names = encargadosCell.split(',').map(n => n.trim());
+                const match = names.some(name => name.toLowerCase().includes(query));
+
+                if(match) {
+                    results.push({ day, shift, zona, matchName: encargadosCell });
+                }
+            });
+
+            displayResults(results, query);
+        }
+
+        function displayResults(results, query) {
+            const list = document.getElementById('searchResultsList');
+            list.innerHTML = '';
+            if(results.length === 0) {
+                list.innerHTML = `<div class="text-center py-4 text-slate-500"><i class="fa-regular fa-face-frown text-2xl mb-2"></i><br>No se encontró a "<b>${query}</b>"</div>`;
+            } else {
+                results.forEach(res => {
+                    const item = document.createElement('div');
+                    item.className = "bg-slate-50 dark:bg-slate-700 p-3 rounded-lg mb-3 border border-slate-200 dark:border-slate-600";
+                    item.innerHTML = `
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-xs font-bold text-white bg-blue-500 px-2 py-0.5 rounded">${res.day}</span>
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-300">${res.shift}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">${res.zona}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800 p-1 rounded border border-slate-100 dark:border-slate-600 mt-2">${res.matchName}</p>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+            openModal('searchModal');
+        }
+
+        // --- TABS & MODALS ---
+        function showTab(day) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('content-' + day).classList.remove('hidden');
+            document.getElementById('tab-' + day).classList.add('active');
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('div');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95'); content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('div');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        // --- DESCARGA ---
+        function downloadSchedule() {
+            const activeTab = document.querySelector('.tab-content:not(.hidden)');
+            if(!activeTab) return;
+            const element = document.getElementById('capture-area');
+            
+            Swal.fire({
+                title: 'Generando Imagen...', text: 'Por favor espere',
+                didOpen: () => Swal.showLoading(), allowOutsideClick: false
+            });
+
+            html2canvas(element, {
+                backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Programacion_2025.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                Swal.close();
+            });
+        }
+
+        // --- TEMA ---
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+        function checkTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                htmlElement.classList.add('dark'); themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        function toggleDarkMode() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                htmlElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+    </script>
+</body>
+</html>

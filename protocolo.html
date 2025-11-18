@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Maestro 2025 - Boulevard Rose</title>
+    
+    <!-- 1. Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Montserrat', 'sans-serif'] } } }
+        }
+    </script>
+    
+    <!-- 2. Fuentes e Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        
+        /* Estilos Generales */
+        .card-section {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        /* Colores de Borde */
+        .border-general { border-color: #3b82f6; } 
+        .border-team { border-color: #8b5cf6; } 
+        .border-aseo { border-color: #06b6d4; } 
+        .border-rules { border-color: #ea580c; } 
+        .border-zonas { border-color: #be185d; } 
+        .border-planos { border-color: #64748b; } 
+
+        /* Timeline */
+        .timeline-item {
+            position: relative; padding-left: 2rem; border-left: 2px solid #e2e8f0; padding-bottom: 1.5rem;
+        }
+        .dark .timeline-item { border-left-color: #334155; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -0.4rem; top: 0.3rem; width: 0.8rem; height: 0.8rem;
+            border-radius: 50%; background: #cbd5e1; border: 2px solid white;
+        }
+        .dark .timeline-item::before { background: #475569; border-color: #1e293b; }
+        .timeline-item.active::before { background: #10b981; }
+
+        /* Utilidades de Scroll y Zoom */
+        .zoom-trigger { cursor: zoom-in; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* =========================================
+           ESTILOS EXCLUSIVOS PARA IMPRESIÓN / PDF
+           (Esto soluciona el problema de diseño al guardar)
+        ========================================= */
+        @media print {
+            /* Ocultar botones y elementos interactivos */
+            .no-print, .fixed, header {
+                display: none !important;
+            }
+            
+            /* Forzar impresión de colores de fondo y gráficos */
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+                color: black !important;
+            }
+
+            /* Evitar cortes de página feos */
+            .card-section, .timeline-item, h2, h3, img {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* Expandir contenedor al ancho del papel */
+            main {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* Ajustes visuales para papel */
+            .card-section {
+                box-shadow: none !important;
+                border: 1px solid #eee;
+                border-left-width: 6px !important; 
+            }
+
+            /* Asegurar que las imágenes se vean completas */
+            img {
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200 pb-24 transition-colors duration-300">
+
+    <!-- BOTONES FLOTANTES (Clase no-print para que no salgan en el PDF) -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-3 no-print">
+        
+        <!-- Botón DESCARGAR/IMPRIMIR (Nativo) -->
+        <button onclick="window.print()" class="bg-emerald-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform border border-emerald-400 flex items-center justify-center group" title="Guardar como PDF (Nativo)">
+            <i class="fa-solid fa-print text-xl"></i>
+        </button>
+
+        <!-- Botón Modo Oscuro -->
+        <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-yellow-400 p-4 rounded-full shadow-xl hover:scale-110 transition-transform border border-slate-300 dark:border-slate-600">
+            <i id="theme-icon" class="fa-solid fa-moon"></i>
+        </button>
+        
+        <!-- Botón Volver -->
+        <a href="index.html" class="bg-slate-800 dark:bg-blue-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform hover:bg-black dark:hover:bg-blue-500">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    </div>
+
+    <!-- Header Principal (Visible en Web, oculto en Print por CSS) -->
+    <header class="bg-slate-900 dark:bg-black text-white py-10 px-4 shadow-md sticky top-0 z-30 transition-colors no-print">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div class="bg-gradient-to-br from-pink-500 to-rose-600 p-4 rounded-xl shadow-lg">
+                <i class="fa-solid fa-map-location-dot text-3xl text-white"></i>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-2xl md:text-4xl font-extrabold uppercase tracking-tight mb-1">Protocolo Feria 2025</h1>
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6 text-sm font-semibold text-slate-300 justify-center md:justify-start">
+                    <span class="flex items-center gap-2"><i class="fa-regular fa-calendar"></i> 21 y 22 Noviembre</span>
+                    <span class="flex items-center gap-2 text-rose-400"><i class="fa-solid fa-location-dot"></i> BOULEVARD ROSE</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Encabezado SOLO PARA IMPRESIÓN (Aparece solo en el PDF) -->
+    <div class="hidden print:block text-center mb-8 pt-4 border-b-2 border-slate-200 pb-4">
+        <h1 class="text-3xl font-bold text-slate-900 uppercase">Protocolo Maestro Feria 2025</h1>
+        <p class="text-sm text-slate-500">Boulevard Rose • 21 y 22 de Noviembre</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-6xl mx-auto px-4 py-8 bg-slate-50 dark:bg-slate-900 print:bg-white">
+
+        <!-- Fase 1 -->
+        <div class="mb-4 flex items-center gap-2">
+            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-bold px-2 py-1 rounded uppercase print:bg-blue-100 print:text-blue-800">Fase 1</span>
+            <h2 class="text-lg font-bold text-slate-400 dark:text-slate-500 uppercase">Organización & Zonas</h2>
+        </div>
+
+        <section class="card-section border-general bg-white dark:bg-slate-800 p-6">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4"><i class="fa-solid fa-info-circle text-blue-500 mr-2"></i> Información General</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-blue-50 dark:bg-slate-700 p-4 rounded-lg print:bg-blue-50">
+                    <p class="text-xs font-bold text-blue-600 dark:text-blue-300 uppercase mb-1 print:text-blue-600">Objetivo</p>
+                    <p class="text-sm font-medium text-slate-700 dark:text-slate-200 print:text-black">Promoción empresarial y gastronómica.</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-slate-700 p-4 rounded-lg print:bg-blue-50">
+                    <p class="text-xs font-bold text-blue-600 dark:text-blue-300 uppercase mb-1 print:text-blue-600">Lugar</p>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white print:text-black">Boulevard Rose</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-slate-700 p-4 rounded-lg print:bg-blue-50">
+                    <p class="text-xs font-bold text-blue-600 dark:text-blue-300 uppercase mb-1 print:text-blue-600">Público</p>
+                    <p class="text-sm font-medium text-slate-700 dark:text-slate-200 print:text-black">Empresarios, Gobierno, Familias.</p>
+                </div>
+            </div>
+        </section>
+
+<section class="card-section border-zonas bg-white dark:bg-slate-800 p-6">
+    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6"><i class="fa-solid fa-street-view text-rose-600 mr-2"></i> Responsables de Zona</h3>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- 1. ACCESO -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-ticket"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Ingreso & Registro</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Control aforo, escarapelas.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Sindy Zuñiga</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. ZONA COMERCIAL (TIENDA CAUCANA) -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-shop"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Tienda Caucana</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Inventario, productos, cuidado del stand.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: María Fernanda Montenegro</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 3. ZONA COMERCIAL (MEGA CARPA) -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-money-bill-1"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Mega carpa de empresas</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Ventas, atención a solicitudes pertinentes.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: María Inés Sanchez</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 4. ZONA COMERCIAL (EMPRENDIMIENTOS) -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-store"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Emprendimientos con montaje</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Queso hilado, Mango pop, Meros nachos, Willis & Zona café.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Daniela Chocó</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 5. RUEDAS DE NEGOCIOS -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-users"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Ruedas de negocios</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Relacionamiento con prospectos y compradores.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Manuel Cordoba</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 6. PATROCINADORES -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Patrocinadores y/o Aliados</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Atención personalizada, listar y mencionar desde tarima.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Andres Muñoz Simmonds</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 7. GASTRONOMIA -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-utensils"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Pabellón Gastronómico</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Control cocinas, suministros.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Luz Elena Laverde</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+        
+        <!-- 8. ZONA ALTERNATIVA -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-ghost"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Zona Alternativa de Comida y Zona Infantil</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Carpas contiguas - Inflables, orbitron y demás</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Andres Samboní</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 9. PICNIC -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-umbrella-beach"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Picnic</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Atención personalizada, montaje y desmontaje de picnic en caso de lluvia.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Diego Jimenez</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 10. TARIMA -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-microphone-lines"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Tarima & Protocolo</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Sonido, presentaciones (infantiles), artistas.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Juan Diego Aza</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 11. AUDIOVISUAL -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-camera-retro"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Publicidad audiovisual</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Facilitar material para el flujo en pantalla, grabaciones de shows y demás.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Daniela Mera</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 12. IMPRESA -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-rectangle-ad"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Publicidad impresa</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Supervisar material impreso, garantizar stands, banners y escarapelas.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Sebastian Restrepo</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+        <!-- 13. INFRAESTRUCTURA -->
+        <div class="border border-rose-400 dark:border-rose-900/30 rounded-lg p-4 bg-white dark:bg-slate-700 print:border-rose-200 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="bg-rose-100 dark:bg-rose-900 p-2 rounded text-rose-600 dark:text-rose-300 print:text-rose-600 print:bg-rose-100"><i class="fa-solid fa-toilet"></i></div>
+                <h4 class="font-bold text-sm uppercase text-slate-700 dark:text-slate-200 print:text-black">Vallas & Zona de baños</h4>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600 flex-grow">Cuidado de brechas, mantenimiento y conteo de vallas - Control de ingreso a baños.</p>
+            <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-600 text-xs font-bold text-rose-700 dark:text-rose-400 print:text-rose-700">Líder: Javier Mera</div>
+            <!-- Botones de contacto -->
+            <div class="mt-3 flex gap-2">
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="#" class="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 text-slate-700 py-1.5 rounded text-xs font-bold transition-colors">
+                    <i class="fa-solid fa-phone"></i> Llamar
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+        <!-- Fase 2 -->
+        <div class="mb-4 mt-8 flex items-center gap-2">
+            <span class="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 text-xs font-bold px-2 py-1 rounded uppercase print:bg-cyan-100 print:text-cyan-800">Fase 2</span>
+            <h2 class="text-lg font-bold text-slate-400 dark:text-slate-500 uppercase">Operatividad</h2>
+        </div>
+
+        <section class="card-section border-aseo bg-cyan-50/30 dark:bg-slate-800 p-0 print:bg-cyan-50">
+            <div class="bg-cyan-600 dark:bg-cyan-800 text-white p-4 flex justify-between items-center print:bg-cyan-600 print:text-white">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-pump-soap mr-2"></i> Aseo y Saneamiento</h3>
+                <span class="bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-400 text-xs font-bold px-2 py-1 rounded uppercase print:bg-white print:text-cyan-700">Prioridad Alta</span>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-cyan-800 dark:text-cyan-300 border-b border-cyan-200 dark:border-cyan-800 pb-2 mb-3 print:text-cyan-800 print:border-cyan-200">Infraestructura Sanitaria</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3 bg-white dark:bg-slate-700 p-3 rounded shadow-sm border border-cyan-100 dark:border-slate-600 print:bg-white print:border-cyan-100">
+                            <span class="text-3xl font-bold text-cyan-500 dark:text-cyan-400 print:text-cyan-600">06</span>
+                            <div class="text-sm">
+                                <strong class="text-slate-800 dark:text-white print:text-black">Unidades Sanitarias</strong>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600">Ubicación señalizada en plano.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-3 bg-white dark:bg-slate-700 p-3 rounded shadow-sm border border-cyan-100 dark:border-slate-600 print:bg-white print:border-cyan-100">
+                            <span class="text-3xl font-bold text-cyan-500 dark:text-cyan-400 print:text-cyan-600">03</span>
+                            <div class="text-sm">
+                                <strong class="text-slate-800 dark:text-white print:text-black">Lavamanos Comunes</strong>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 print:text-slate-600">Zona externa. Verificar agua.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="text-slate-700 dark:text-slate-300 print:text-black">
+                    <h4 class="font-bold text-cyan-800 dark:text-cyan-300 border-b border-cyan-200 dark:border-cyan-800 pb-2 mb-3 print:text-cyan-800 print:border-cyan-200">Gestión de Limpieza</h4>
+                    <ul class="text-sm space-y-2">
+                        <li><i class="fa-solid fa-check text-cyan-500 mr-2"></i> <strong>Cuadrilla del mismo sector:</strong> Horario de limpieza: 11:30 am | 4:00 pm | 8:00 pm</li>
+                        <li><i class="fa-solid fa-check text-cyan-500 mr-2"></i> <strong>Puntos Ecológicos:</strong> Contenedores grandes.</li>
+                        <li><i class="fa-solid fa-check text-cyan-500 mr-2"></i> <strong>Residuos Stand:</strong> Recipiente individual obligatorio.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+<section class="card-section border-rules bg-white dark:bg-slate-800 p-6">
+    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">
+        <i class="fa-solid fa-circle-info text-amber-600 mr-2"></i> Información del Evento
+    </h3>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- BLOQUE 1: GENERAL -->
+        <div class="text-slate-700 dark:text-slate-300 print:text-black">
+            <h4 class="font-bold text-slate-700 dark:text-slate-400 mb-3 uppercase text-xs tracking-wider print:text-slate-700">
+                Datos Generales
+            </h4>
+            <ul class="text-sm space-y-3">
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-users text-amber-500"></i> Visitantes Esperados</span>
+                    <span class="font-bold">5000</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-building text-amber-500"></i> Empresas Participantes</span>
+                    <span class="font-bold">40</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-utensils text-amber-500"></i> Restaurantes</span>
+                    <span class="font-bold">10</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-ticket text-amber-500"></i> Entrada</span>
+                    <span class="font-bold">Gratuita</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-gift text-amber-500"></i> Premios</span>
+                    <span class="font-bold">Para niños, niñas y adultos</span>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- BLOQUE 2: ZONAS / ESPACIOS -->
+        <div class="text-slate-700 dark:text-slate-300 print:text-black">
+            <h4 class="font-bold text-slate-700 dark:text-slate-400 mb-3 uppercase text-xs tracking-wider print:text-slate-700">
+                Zonas y Espacios
+            </h4>
+            <ul class="text-sm space-y-3">
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-tent text-amber-500"></i> Zona Carpas</span>
+                    <span class="font-bold">Incluye patrocinadores</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-child-reaching text-amber-500"></i> Zona de Juegos</span>
+                    <span class="font-bold">Habilitada</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-tree text-amber-500"></i> Zona Picnic</span>
+                    <span class="font-bold">10 Nichos</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-chair text-amber-500"></i> Mobiliario por Stand</span>
+                    <span class="font-bold">1 Mesa + 2 Sillas</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-border-all text-amber-500"></i> Cerramiento</span>
+                    <span class="font-bold">Vallas</span>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- BLOQUE 3: MARCAS Y PRODUCTOS -->
+        <div class="text-slate-700 dark:text-slate-300 print:text-black">
+            <h4 class="font-bold text-slate-700 dark:text-slate-400 mb-3 uppercase text-xs tracking-wider print:text-slate-700">
+                Marcas y Productos
+            </h4>
+            <ul class="text-sm space-y-3">
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-store text-amber-500"></i> Stand Principal</span>
+                    <span class="font-bold">Tienda Cauca</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-star text-amber-500"></i> Producto Estrella</span>
+                    <span class="font-bold">Arroz</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-bottle-droplet text-amber-500"></i> Bebida Exclusiva</span>
+                    <span class="font-bold">Postobón</span>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- BLOQUE 4: ACLARACIONES -->
+        <div class="text-slate-700 dark:text-slate-300 print:text-black">
+            <h4 class="font-bold text-slate-700 dark:text-slate-400 mb-3 uppercase text-xs tracking-wider print:text-slate-700">
+                Aclaraciones Importantes
+            </h4>
+            <ul class="text-sm space-y-3">
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-circle-exclamation text-red-500"></i> Parqueadero</span>
+                    <span class="font-bold">No es responsabilidad del evento</span>
+                </li>
+
+                <li class="flex justify-between border-b pb-1 dark:border-slate-700">
+                    <span><i class="fa-solid fa-clipboard-list text-amber-500"></i> Información Variada</span>
+                    <span class="font-bold">Actualización continua</span>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+
+
+        <!-- Fase 3 -->
+        <div class="mb-4 mt-8 flex items-center gap-2">
+            <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-bold px-2 py-1 rounded uppercase print:bg-green-100 print:text-green-800">Fase 3</span>
+            <h2 class="text-lg font-bold text-slate-400 dark:text-slate-500 uppercase">Cronograma Detallado</h2>
+        </div>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- VIERNES -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden border-t-4 border-blue-600 print:shadow-none print:border">
+                <div class="bg-blue-50 dark:bg-slate-700 p-4 border-b border-blue-100 dark:border-slate-600 print:bg-blue-50 print:border-blue-100">
+                    <h3 class="text-xl font-extrabold text-blue-800 dark:text-blue-300 print:text-blue-800">VIERNES 21</h3>
+                </div>
+                <div class="p-6">
+                    <div class="timeline-item active">
+                        <div class="text-xs font-bold text-slate-400">10:00 AM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Lanzamiento de la Ruta</h4>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="text-xs font-bold text-slate-400">11:00 AM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Producto Estrella: Arroz</h4>
+                    </div>
+                    <div class="timeline-item bg-blue-50/50 dark:bg-slate-700/50 -ml-4 pl-12 py-3 rounded border-l-4 border-blue-400 mb-4 print:bg-blue-50 print:border-blue-300">
+                        <div class="text-xs font-bold text-blue-700 dark:text-blue-300 print:text-blue-800">12:00 PM - ACTO SOLEMNE</div>
+                        <ul class="text-sm text-slate-700 dark:text-slate-300 print:text-black list-disc list-inside">
+                            <li>Himnos (Colombia, Cauca, Popayán).</li>
+                            <li>Palabras Sec. Desarrollo.</li>
+                            <li>Presentación Cultural.</li>
+                            <li><strong>Almuerzo Gobernador.</strong></li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">3:00 PM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Fogón y Carantanta en Vivo</h4>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">4:00 PM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Trivia del Pipián</h4>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">6:00 PM - CIERRE</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Shows Musicales</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SABADO -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden border-t-4 border-orange-500 print:shadow-none print:border">
+                <div class="bg-orange-50 dark:bg-slate-700 p-4 border-b border-orange-100 dark:border-slate-600 print:bg-orange-50 print:border-orange-100">
+                    <h3 class="text-xl font-extrabold text-orange-800 dark:text-orange-300 print:text-orange-800">SÁBADO 22</h3>
+                </div>
+                <div class="p-6">
+                    <div class="timeline-item active">
+                        <div class="text-xs font-bold text-slate-400">10:00 AM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">MiniChefs en Vivo</h4>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="text-xs font-bold text-slate-400">11:00 AM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">ChirimiKids</h4>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">12:00 PM - 2:00 PM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Bloque Seguridad</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 print:text-slate-600">Show Canino + Exhibición Policía.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">2:00 PM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Hora Loca Infantil</h4>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">3:00 PM</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Show Manjar Blanco</h4>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="text-xs font-bold text-slate-400">5:20 PM - CIERRE</div>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black">Cierre de Feria</h4>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Anexos -->
+        <div class="mb-4 mt-10 flex items-center gap-2">
+            <span class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold px-2 py-1 rounded uppercase print:bg-slate-200 print:text-black">Anexos</span>
+            <h2 class="text-lg font-bold text-slate-400 dark:text-slate-500 uppercase">Mapas y Planos</h2>
+        </div>
+
+        <section class="card-section border-planos bg-white dark:bg-slate-800 p-6">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6"><i class="fa-regular fa-map text-slate-600 dark:text-slate-400 mr-2"></i> Distribución Boulevard Rose</h3>
+            
+            <div class="space-y-8">
+                <div>
+                    <h4 class="font-bold text-slate-600 dark:text-slate-300 mb-2 text-sm uppercase print:text-black">1. Distribución General</h4>
+                    <div onclick="openModal('./PLANO.png')" class="w-full h-64 bg-slate-100 dark:bg-slate-700 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer zoom-trigger">
+                        <img src="./PLANO.png" class="w-full h-full object-contain absolute z-0" alt="Plano General">
+                    </div>
+                </div>
+
+                <!-- <div>
+                    <h4 class="font-bold text-red-600 dark:text-red-400 mb-2 text-sm uppercase print:text-red-600">2. Rutas de Evacuación</h4>
+                    <div onclick="openModal('./PLANO.png')" class="w-full h-64 bg-red-50 dark:bg-slate-700 border-2 border-dashed border-red-200 dark:border-red-900 rounded-lg flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer hover:bg-red-50/80 dark:hover:bg-slate-600 transition zoom-trigger">
+                        <img src="./PLANO.png" class="w-full h-full object-contain absolute z-0" alt="Plano Evacuación">
+                    </div>
+                </div> -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VISOR MODAL (Oculto al imprimir) -->
+    <div id="imageModal" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col backdrop-blur-sm transition-opacity duration-300 opacity-0 no-print">
+        <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-black/60 z-50 backdrop-blur-md">
+            <span class="text-white/90 text-sm font-bold uppercase tracking-widest"><i class="fa-solid fa-eye"></i> Visor</span>
+            <div class="flex gap-3">
+                <button onclick="zoomImage(-10)" class="bg-slate-800 hover:bg-slate-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-lg border border-slate-600"><i class="fa-solid fa-minus"></i></button>
+                <button onclick="zoomImage(10)" class="bg-slate-800 hover:bg-slate-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-lg border border-slate-600"><i class="fa-solid fa-plus"></i></button>
+                <button onclick="closeModal()" class="bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-lg border border-red-400 ml-2"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div class="flex-1 w-full h-full overflow-auto flex items-center justify-center p-4 pt-20" id="scrollContainer">
+            <img id="modalImage" class="transition-all duration-200 ease-out shadow-2xl" src="" style="max-width: none; width: 100%;">
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        /* --- MODO OSCURO --- */
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        function toggleDarkMode() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        }
+
+        /* --- VISOR DE IMÁGENES --- */
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        let currentWidthPercent = 100;
+
+        function openModal(src) {
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+            document.body.style.overflow = 'hidden'; 
+            currentWidthPercent = 100; 
+            if(window.innerWidth > 768) {
+                modalImg.style.width = 'auto'; modalImg.style.height = '80vh';
+            } else {
+                modalImg.style.width = '100%'; modalImg.style.height = 'auto';
+            }
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modalImg.src = '';
+                document.body.style.overflow = ''; 
+            }, 300);
+        }
+
+        function zoomImage(amount) {
+            if(modalImg.style.height !== 'auto') { modalImg.style.height = 'auto'; currentWidthPercent = 100; }
+            currentWidthPercent += amount;
+            if (currentWidthPercent < 50) currentWidthPercent = 50;
+            if (currentWidthPercent > 300) currentWidthPercent = 300;
+            modalImg.style.width = `${currentWidthPercent}%`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) { closeModal(); }
+        });
+
+        /* --- ANIMACIONES --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.card-section, .timeline-item');
+            sections.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                setTimeout(() => {
+                    el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+    </script>
+</body>
+</html>
