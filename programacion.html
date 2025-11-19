@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programación - Cauca Fest 2025</title>
+    <title>Programación - Cauca Festival 2025</title>
 
-        <!-- Favicon para la pestaña del navegador -->
     <link rel="icon" type="image/x-icon" href="./logo.ico">
 
-    <!-- ================================================================== -->
-    <!-- AQUI ESTÁ LA SOLUCIÓN: META TAGS PARA WHATSAPP (OPEN GRAPH)        -->
-    <!-- ================================================================== -->
+    <!-- META TAGS -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Cauca Fest 2025"> <!-- Título en WhatsApp -->
-    <meta property="og:description" content="Bienvenido al equipo SDEC. Consulta el protocolo y la programación."> <!-- Descripción pequeña -->
-    
-    <!-- IMPORTANTE: WhatsApp prefiere imágenes PNG o JPG, no .ico -->
-    <!-- Para que funcione perfecto, se recomienda poner la URL COMPLETA (ej: https://tusitio.com/logo.png) -->
-    <meta property="og:image" content="https://sdec-cauca.github.io/fest2025/logo.png"> 
+    <meta property="og:title" content="Cauca Festival 2025">
+    <meta property="og:description" content="Programación oficial de personal y roles.">
+    <meta property="og:image" content="https://sdec-cauca.github.io/Festival2025/logo.png"> 
     <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="90"> <!-- Ancho recomendado -->
-    <meta property="og:image:height" content="30"> <!-- Alto recomendado -->
     
-    <!-- 1. Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -36,7 +28,7 @@
         }
     </script>
     
-    <!-- 2. Librerías -->
+    <!-- Librerías -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -44,45 +36,31 @@
 
     <style>
         body { font-family: 'Montserrat', sans-serif; }
-        body, div, section, h1, h2, h3, p, i, li, span, table, th, td, input {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        /* Estilos Glassmorphism */
-        .card-section {
-            border-radius: 16px;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(203, 213, 225, 0.5);
-            overflow: hidden;
-        }
-        .dark .card-section {
-            border-color: rgba(71, 85, 105, 0.5);
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Tabs */
-        .tab-btn { transition: all 0.3s ease; border-bottom: 4px solid transparent; opacity: 0.6; }
+        body, div, section, h1, h2, h3, p, i, li, span, table, th, td, input, button { transition: all 0.3s ease; }
+        .card-section { border-radius: 16px; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1); border: 1px solid rgba(203, 213, 225, 0.5); overflow: hidden; }
+        .dark .card-section { border-color: rgba(71, 85, 105, 0.5); box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5); }
+        .tab-btn { border-bottom: 4px solid transparent; opacity: 0.6; }
         .tab-btn:hover { opacity: 1; }
-        .tab-btn.active {
-            color: #2563eb; border-bottom-color: #2563eb; opacity: 1;
-        }
+        .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; opacity: 1; }
         .dark .tab-btn.active { color: #60a5fa; border-bottom-color: #60a5fa; }
 
-        /* Input Buscador */
-        .search-input:focus {
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        /* Estilo Badges */
+        .person-badge {
+            border-radius: 22px; padding: 6px 14px; font-size: 0.75rem; font-weight: 700;
+            display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
+            background-color: #f8fafc; color: #334155; white-space: nowrap;
+            margin-bottom: 4px;
         }
+        .dark .person-badge { background-color: #1e293b; color: #e2e8f0; border-color: rgba(255,255,255,0.1); }
+        .person-badge:hover { transform: translateY(-2px); background-color: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .dark .person-badge:hover { background-color: #3b82f6; }
 
-        /* Tablas */
         .schedule-table th { letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.75rem; }
-        .schedule-table td { font-size: 0.85rem; vertical-align: middle; padding: 0.8rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .schedule-table td { vertical-align: middle; padding: 0.8rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .dark .schedule-table td { border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Filas alternas sutiles */
         .schedule-table tbody tr:hover { background-color: rgba(0, 0, 0, 0.02); }
         .dark .schedule-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.05); }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -113,8 +91,6 @@
             </div>
             <div class="flex-1 w-full">
                 <h1 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-2">Programación de Personal</h1>
-                
-                <!-- BUSCADOR -->
                 <div class="relative max-w-lg mx-auto md:mx-0 mt-4">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
@@ -144,208 +120,354 @@
             </button>
         </div>
 
-        <!-- CONTENEDOR CAPTURABLE -->
         <div id="capture-area" class="bg-slate-50 dark:bg-slate-900 p-2 rounded-xl">
-
-            <!-- TAB: VIERNES 21 -->
+            
+            <!-- ==============================================================
+                 TAB: VIERNES 21
+            =================================================================== -->
             <div id="content-viernes" class="tab-content fade-in">
                 
-                <!-- MAÑANA -->
+                <!-- VIERNES: MAÑANA -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-blue-500">
-                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase flex items-center gap-2">
-                            <i class="fa-regular fa-sun"></i> Mañana (8:00 AM - 12:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Mañana">
-                                <!-- COLORES INTERCALADOS EN MODO OSCURO -->
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase"><i class="fa-regular fa-sun mr-2"></i> Mañana (8:00 AM - 12:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Mañana">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="YUDY CAROLINA SANTOS VARGAS" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YUDY CAROLINA SANTOS VARGAS</button>
+                            <button onclick="showPersonRole(this)" data-name="ALIX LORENA ORDOÑEZ" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ALIX LORENA ORDOÑEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="JHON JAIRO LONDOÑO SILVA" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JHON JAIRO LONDOÑO SILVA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JOHN ARLEY ZEMANATE SOTELO" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOHN ARLEY ZEMANATE SOTELO</button>
+                            <button onclick="showPersonRole(this)" data-name="EYMI SILVANA VIDAL SOLIS" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EYMI SILVANA VIDAL SOLIS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JESÚS ENRIQUE PÉREZ MOMPOTES" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JESÚS ENRIQUE PÉREZ MOMPOTES</button>
+                            <button onclick="showPersonRole(this)" data-name="YENI GREGORIA RUIZ TOSSE" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YENI GREGORIA RUIZ TOSSE</button>
+                            <button onclick="showPersonRole(this)" data-name="WILLIAM HORACIO LOPEZ CAPOTE" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> WILLIAM HORACIO LOPEZ CAPOTE</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MARIA DEL MAR GUTIERREZ VALENCIA" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MARIA DEL MAR GUTIERREZ VALENCIA</button>
+                            <button onclick="showPersonRole(this)" data-name="JULIAN ALBEIRO CHAMORRO CADAVID" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JULIAN ALBEIRO CHAMORRO CADAVID</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MIGUEL SANTIAGO ANGEL ERAZO" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MIGUEL SANTIAGO ANGEL ERAZO</button>
+                            <button onclick="showPersonRole(this)" data-name="MONICA REGINA ORDOÑEZ ERAZO" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA REGINA ORDOÑEZ ERAZO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JORGE LUIS GUECHE MANQUILLO" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JORGE LUIS GUECHE MANQUILLO</button>
+                            <button onclick="showPersonRole(this)" data-name="DAVID ALBERTO MEJIA REYES" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DAVID ALBERTO MEJIA REYES</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="EVELIN ALEJANDRA MEDINA VILLAMIL" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EVELIN ALEJANDRA MEDINA VILLAMIL</button>
+                            <button onclick="showPersonRole(this)" data-name="CARLOS ALBERTO BETANCOURT IDROBO" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CARLOS ALBERTO BETANCOURT IDROBO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="DIANA MARCELA VELASCO GARCÉS" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DIANA MARCELA VELASCO GARCÉS</button>
+                            <button onclick="showPersonRole(this)" data-name="JOSÉ JARVY BANGUERO MINA" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSÉ JARVY BANGUERO MINA</button>
+                            <button onclick="showPersonRole(this)" data-name="JOHN JAIRO COLLAZOS PINZÓN" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOHN JAIRO COLLAZOS PINZÓN</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LUIS ANGEL ACOSTA ORTEGA" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS ANGEL ACOSTA ORTEGA</button>
+                            <button onclick="showPersonRole(this)" data-name="CHRISTIAN CAMILO ERAZO MUÑOZ" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CHRISTIAN CAMILO ERAZO MUÑOZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LUZ DANNY GARZÓN ROJAS" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUZ DANNY GARZÓN ROJAS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="SERGIO ANDRÉS MUÑOZ HOYOS" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SERGIO ANDRÉS MUÑOZ HOYOS</button>
+                            <button onclick="showPersonRole(this)" data-name="JOSE ALBERTO ENRIQUEZ ESPINOSA" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSE ALBERTO ENRIQUEZ ESPINOSA</button>
+                            <button onclick="showPersonRole(this)" data-name="FABER GUSTAVO PISSO GURRUTE" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> FABER GUSTAVO PISSO GURRUTE</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
 
-                <!-- TARDE -->
+                <!-- VIERNES: TARDE -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-orange-500">
-                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase flex items-center gap-2">
-                            <i class="fa-regular fa-clock"></i> Tarde (12:00 PM - 5:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Tarde">
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase"><i class="fa-regular fa-clock mr-2"></i> Tarde (12:00 PM - 5:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Tarde">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MIRIAM TERESA VIDAL CAMAYO" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MIRIAM TERESA VIDAL CAMAYO</button>
+                            <button onclick="showPersonRole(this)" data-name="CLAUDIA LOPEZ PENAGOS" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CLAUDIA LOPEZ PENAGOS</button>
+                            <button onclick="showPersonRole(this)" data-name="DORA ELIZABETH CERÓN PARRA" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DORA ELIZABETH CERÓN PARRA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="OLGA LUCÍA AGUDELO LÓPEZ" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OLGA LUCÍA AGUDELO LÓPEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="HAROL MAURICIO MUÑOZ CHAMORRO" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> HAROL MAURICIO MUÑOZ CHAMORRO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LUIS GERARDO RENGIFO BERNAL" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS GERARDO RENGIFO BERNAL</button>
+                            <button onclick="showPersonRole(this)" data-name="LUCY JOHANA CASAMACHIN PILLIMUÉ" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUCY JOHANA CASAMACHIN PILLIMUÉ</button>
+                            <button onclick="showPersonRole(this)" data-name="MARÍA FERNANDA ALARCÓN BUSTAMANTE" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MARÍA FERNANDA ALARCÓN BUSTAMANTE</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="SAIR YAMILE OBANDO NARVAEZ" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SAIR YAMILE OBANDO NARVAEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="CINTHIA XIMENA BARONA SOLARTE" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CINTHIA XIMENA BARONA SOLARTE</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JUAN DE DIOS MATINEZ ACOSTA" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JUAN DE DIOS MATINEZ ACOSTA</button>
+                            <button onclick="showPersonRole(this)" data-name="ADRIANA ALEJANDRA BOLAÑOS MELENDEZ" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ADRIANA ALEJANDRA BOLAÑOS MELENDEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="GLADYS DEIFAN BASTIDAS GUSTIN" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> GLADYS DEIFAN BASTIDAS GUSTIN</button>
+                            <button onclick="showPersonRole(this)" data-name="EVELIN ALEJANDRA MENESES SANCHEZ" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EVELIN ALEJANDRA MENESES SANCHEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JOSE FERNANDO SALDAÑA MOSQUERA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSE FERNANDO SALDAÑA MOSQUERA</button>
+                            <button onclick="showPersonRole(this)" data-name="ANGIE PAOLA MOSQUERA ARTUNDUAGA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANGIE PAOLA MOSQUERA ARTUNDUAGA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="FRANCISCO JOSE IDROBO IDROBO" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> FRANCISCO JOSE IDROBO IDROBO</button>
+                            <button onclick="showPersonRole(this)" data-name="SIDNEY MAGNOLIA SOLARTE CÓRDOBA" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SIDNEY MAGNOLIA SOLARTE CÓRDOBA</button>
+                            <button onclick="showPersonRole(this)" data-name="JAIME DAVID CABRERA TORO" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JAIME DAVID CABRERA TORO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JEISON ANDRES LASSO CORRALES" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JEISON ANDRES LASSO CORRALES</button>
+                            <button onclick="showPersonRole(this)" data-name="YICEL FERNANDA RODRÍGUEZ QUINAYAS" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YICEL FERNANDA RODRÍGUEZ QUINAYAS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MONICA GOMEZ SANDOVAL" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA GOMEZ SANDOVAL</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="OSCAR MANUEL CASTRILLON COBO" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OSCAR MANUEL CASTRILLON COBO</button>
+                            <button onclick="showPersonRole(this)" data-name="DAVID FERNANDO CHOCUE GUETIO" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DAVID FERNANDO CHOCUE GUETIO</button>
+                            <button onclick="showPersonRole(this)" data-name="PABLO CARLOS RUIZ FERNANDEZ" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> PABLO CARLOS RUIZ FERNANDEZ</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
 
-                <!-- NOCHE -->
+                <!-- VIERNES: NOCHE -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-indigo-500">
-                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-moon"></i> Noche (5:00 PM - 10:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Noche">
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase"><i class="fa-solid fa-moon mr-2"></i> Noche (5:00 PM - 10:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="VIERNES 21" data-shift="Noche">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="YERALDIN SANCHEZ CAMPO" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YERALDIN SANCHEZ CAMPO</button>
+                            <button onclick="showPersonRole(this)" data-name="DUVÁN FRANCISCO CERON RIASCOS" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DUVÁN FRANCISCO CERON RIASCOS</button>
+                            <button onclick="showPersonRole(this)" data-name="JHON ANDERSON VALENCIA GENOY" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JHON ANDERSON VALENCIA GENOY</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="AURORA ANGULO VALENCIA" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> AURORA ANGULO VALENCIA</button>
+                            <button onclick="showPersonRole(this)" data-name="MAYRA ALEJANDRA HINESTROZA PAZ" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MAYRA ALEJANDRA HINESTROZA PAZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="KATHERINE MUÑOZ VELASCO" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> KATHERINE MUÑOZ VELASCO</button>
+                            <button onclick="showPersonRole(this)" data-name="MONICA HORMIGA" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA HORMIGA</button>
+                            <button onclick="showPersonRole(this)" data-name="DIDIER ALEXANDER CALDERON ROSERO" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DIDIER ALEXANDER CALDERON ROSERO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LUZ YAMILET GALINDEZ GUERRERO" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUZ YAMILET GALINDEZ GUERRERO</button>
+                            <button onclick="showPersonRole(this)" data-name="LISSETH XIOMARA VILLA ORDOÑEZ" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LISSETH XIOMARA VILLA ORDOÑEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="EMILIO JOSÉ CORRALES CASTILLO" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EMILIO JOSÉ CORRALES CASTILLO</button>
+                            <button onclick="showPersonRole(this)" data-name="LUIS ALFONSO FERNÁNDEZ BURBANO" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS ALFONSO FERNÁNDEZ BURBANO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JAVIER CAMILO PACHO OROZCO" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JAVIER CAMILO PACHO OROZCO</button>
+                            <button onclick="showPersonRole(this)" data-name="DANIEL AICARDO GOMEZ AÑASCO" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DANIEL AICARDO GOMEZ AÑASCO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="YULIANA LORENA SILVA MOSQUERA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YULIANA LORENA SILVA MOSQUERA</button>
+                            <button onclick="showPersonRole(this)" data-name="LILIANA KELINE BAMBAGÜÉ NAVIA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LILIANA KELINE BAMBAGÜÉ NAVIA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="HAROLD ANDRES FERNANDEZ MEDINA" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> HAROLD ANDRES FERNANDEZ MEDINA</button>
+                            <button onclick="showPersonRole(this)" data-name="VIVIANA LOPEZ MOSQUERA" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> VIVIANA LOPEZ MOSQUERA</button>
+                            <button onclick="showPersonRole(this)" data-name="ANDRES JOSE GOMEZ" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES JOSE GOMEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="ANDRES REYNALDO MUÑOZ SIMMONDS" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES REYNALDO MUÑOZ SIMMONDS</button>
+                            <button onclick="showPersonRole(this)" data-name="JUAN JOSE HURTADO VILLAMARIN" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JUAN JOSE HURTADO VILLAMARIN</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="OMAR GERARDO ARBOLEDA MUÑOZ" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OMAR GERARDO ARBOLEDA MUÑOZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LILIANA PEREA PEÑA" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LILIANA PEREA PEÑA</button>
+                            <button onclick="showPersonRole(this)" data-name="ANDRES FELIPE ISAZA OSORIO" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES FELIPE ISAZA OSORIO</button>
+                            <button onclick="showPersonRole(this)" data-name="SILVANA MARIA ROSERO PEREZ" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SILVANA MARIA ROSERO PEREZ</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
             </div>
 
-            <!-- TAB: SÁBADO 22 -->
+            <!-- ==============================================================
+                 TAB: SÁBADO 22 (BARAJADO DIFERENTE)
+            =================================================================== -->
             <div id="content-sabado" class="tab-content hidden fade-in">
                 
-                <!-- MAÑANA -->
+                <!-- SÁBADO: MAÑANA -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-blue-500">
-                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase flex items-center gap-2">
-                            <i class="fa-regular fa-sun"></i> Mañana (8:00 AM - 12:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Mañana">
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-blue-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-blue-700 dark:text-blue-300 uppercase"><i class="fa-regular fa-sun mr-2"></i> Mañana (8:00 AM - 12:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Mañana">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JHON ANDERSON VALENCIA GENOY" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JHON ANDERSON VALENCIA GENOY</button>
+                            <button onclick="showPersonRole(this)" data-name="PABLO CARLOS RUIZ FERNANDEZ" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> PABLO CARLOS RUIZ FERNANDEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="VIVIANA LOPEZ MOSQUERA" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> VIVIANA LOPEZ MOSQUERA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="DIANA MARCELA VELASCO GARCÉS" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DIANA MARCELA VELASCO GARCÉS</button>
+                            <button onclick="showPersonRole(this)" data-name="LUZ YAMILET GALINDEZ GUERRERO" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUZ YAMILET GALINDEZ GUERRERO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="ADRIANA ALEJANDRA BOLAÑOS MELENDEZ" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ADRIANA ALEJANDRA BOLAÑOS MELENDEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="LUCY JOHANA CASAMACHIN PILLIMUÉ" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUCY JOHANA CASAMACHIN PILLIMUÉ</button>
+                            <button onclick="showPersonRole(this)" data-name="ANDRES REYNALDO MUÑOZ SIMMONDS" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES REYNALDO MUÑOZ SIMMONDS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MONICA GOMEZ SANDOVAL" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA GOMEZ SANDOVAL</button>
+                            <button onclick="showPersonRole(this)" data-name="CHRISTIAN CAMILO ERAZO MUÑOZ" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CHRISTIAN CAMILO ERAZO MUÑOZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JOHN ARLEY ZEMANATE SOTELO" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOHN ARLEY ZEMANATE SOTELO</button>
+                            <button onclick="showPersonRole(this)" data-name="DAVID FERNANDO CHOCUE GUETIO" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DAVID FERNANDO CHOCUE GUETIO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LILIANA PEREA PEÑA" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LILIANA PEREA PEÑA</button>
+                            <button onclick="showPersonRole(this)" data-name="JUAN DE DIOS MATINEZ ACOSTA" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JUAN DE DIOS MATINEZ ACOSTA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JARVI ANTONIO MOLANO MOLANO" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JARVI ANTONIO MOLANO MOLANO</button>
+                            <button onclick="showPersonRole(this)" data-name="YENI GREGORIA RUIZ TOSSE" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YENI GREGORIA RUIZ TOSSE</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="AURORA ANGULO VALENCIA" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> AURORA ANGULO VALENCIA</button>
+                            <button onclick="showPersonRole(this)" data-name="JEISON ANDRES LASSO CORRALES" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JEISON ANDRES LASSO CORRALES</button>
+                            <button onclick="showPersonRole(this)" data-name="YERALDIN SANCHEZ CAMPO" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YERALDIN SANCHEZ CAMPO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LEYVY JEANNETE MINA ZAPATA" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LEYVY JEANNETE MINA ZAPATA</button>
+                            <button onclick="showPersonRole(this)" data-name="OLGA LUCÍA AGUDELO LÓPEZ" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OLGA LUCÍA AGUDELO LÓPEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="ANDRES JOSE GOMEZ" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES JOSE GOMEZ</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LISSETH XIOMARA VILLA ORDOÑEZ" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LISSETH XIOMARA VILLA ORDOÑEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="JORGE LUIS GUECHE MANQUILLO" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JORGE LUIS GUECHE MANQUILLO</button>
+                            <button onclick="showPersonRole(this)" data-name="EYMI SILVANA VIDAL SOLIS" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EYMI SILVANA VIDAL SOLIS</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
 
-                <!-- TARDE -->
+                <!-- SÁBADO: TARDE -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-orange-500">
-                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase flex items-center gap-2">
-                            <i class="fa-regular fa-clock"></i> Tarde (12:00 PM - 5:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Tarde">
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-orange-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-orange-700 dark:text-orange-300 uppercase"><i class="fa-regular fa-clock mr-2"></i> Tarde (12:00 PM - 5:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Tarde">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JUAN JOSE HURTADO VILLAMARIN" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JUAN JOSE HURTADO VILLAMARIN</button>
+                            <button onclick="showPersonRole(this)" data-name="ALIX LORENA ORDOÑEZ" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ALIX LORENA ORDOÑEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="DAVID ALBERTO MEJIA REYES" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DAVID ALBERTO MEJIA REYES</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="FABER GUSTAVO PISSO GURRUTE" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> FABER GUSTAVO PISSO GURRUTE</button>
+                            <button onclick="showPersonRole(this)" data-name="CARLOS ALBERTO BETANCOURT IDROBO" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CARLOS ALBERTO BETANCOURT IDROBO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="GLADYS DEIFAN BASTIDAS GUSTIN" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> GLADYS DEIFAN BASTIDAS GUSTIN</button>
+                            <button onclick="showPersonRole(this)" data-name="YUDY CAROLINA SANTOS VARGAS" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YUDY CAROLINA SANTOS VARGAS</button>
+                            <button onclick="showPersonRole(this)" data-name="ANDRES FELIPE ISAZA OSORIO" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANDRES FELIPE ISAZA OSORIO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="WILLIAM HORACIO LOPEZ CAPOTE" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> WILLIAM HORACIO LOPEZ CAPOTE</button>
+                            <button onclick="showPersonRole(this)" data-name="EMILIO JOSÉ CORRALES CASTILLO" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EMILIO JOSÉ CORRALES CASTILLO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="SAIR YAMILE OBANDO NARVAEZ" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SAIR YAMILE OBANDO NARVAEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="YICEL FERNANDA RODRÍGUEZ QUINAYAS" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YICEL FERNANDA RODRÍGUEZ QUINAYAS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="EVELIN ALEJANDRA MENESES SANCHEZ" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EVELIN ALEJANDRA MENESES SANCHEZ</button>
+                            <button onclick="showPersonRole(this)" data-name="LUIS GERARDO RENGIFO BERNAL" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS GERARDO RENGIFO BERNAL</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MAYRA ALEJANDRA HINESTROZA PAZ" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MAYRA ALEJANDRA HINESTROZA PAZ</button>
+                            <button onclick="showPersonRole(this)" data-name="JULIAN ALBEIRO CHAMORRO CADAVID" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JULIAN ALBEIRO CHAMORRO CADAVID</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="SILVANA MARIA ROSERO PEREZ" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SILVANA MARIA ROSERO PEREZ</button>
+                            <button onclick="showPersonRole(this)" data-name="MARIA DEL MAR GUTIERREZ VALENCIA" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MARIA DEL MAR GUTIERREZ VALENCIA</button>
+                            <button onclick="showPersonRole(this)" data-name="HAROLD ANDRES FERNANDEZ MEDINA" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> HAROLD ANDRES FERNANDEZ MEDINA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LUZ DANNY GARZÓN ROJAS" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUZ DANNY GARZÓN ROJAS</button>
+                            <button onclick="showPersonRole(this)" data-name="CLAUDIA LOPEZ PENAGOS" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CLAUDIA LOPEZ PENAGOS</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JESÚS ENRIQUE PÉREZ MOMPOTES" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JESÚS ENRIQUE PÉREZ MOMPOTES</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MARÍA FERNANDA ALARCÓN BUSTAMANTE" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MARÍA FERNANDA ALARCÓN BUSTAMANTE</button>
+                            <button onclick="showPersonRole(this)" data-name="DUVÁN FRANCISCO CERON RIASCOS" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DUVÁN FRANCISCO CERON RIASCOS</button>
+                            <button onclick="showPersonRole(this)" data-name="MIGUEL SANTIAGO ANGEL ERAZO" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MIGUEL SANTIAGO ANGEL ERAZO</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
 
-                <!-- NOCHE -->
+                <!-- SÁBADO: NOCHE -->
                 <section class="card-section bg-white dark:bg-slate-800 mb-8 border-l-[6px] border-l-indigo-500">
-                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-moon"></i> Noche (5:00 PM - 10:00 PM)
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left schedule-table">
-                            <thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                <tr><th class="p-4">Zona / Lugar</th><th class="p-4">Responsables (3 por zona)</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Noche">
-                                <tr><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-teal-400">Emprendimientos Montaje</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-cyan-400">Ruedas de Negocios</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alternativa / Infantil</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-lime-400">Picnic</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-sky-400">Publicidad Impresa</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                                <tr><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td class="person-name">[Persona 1], [Persona 2], [Persona 3]</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="p-4 bg-indigo-50 dark:bg-slate-700/50 flex justify-between items-center"><h3 class="font-bold text-lg text-indigo-700 dark:text-indigo-300 uppercase"><i class="fa-solid fa-moon mr-2"></i> Noche (5:00 PM - 10:00 PM)</h3></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left schedule-table"><thead class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><tr><th class="p-4 w-1/3">Zona / Lugar</th><th class="p-4">Equipo (Click para ver Rol)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700 search-scope" data-day="SÁBADO 22" data-shift="Noche">
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-blue-400">Ingreso & Registro</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="CINTHIA XIMENA BARONA SOLARTE" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> CINTHIA XIMENA BARONA SOLARTE</button>
+                            <button onclick="showPersonRole(this)" data-name="MONICA REGINA ORDOÑEZ ERAZO" data-role="ATENCIÓN A USUARIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA REGINA ORDOÑEZ ERAZO</button>
+                            <button onclick="showPersonRole(this)" data-name="EVELIN ALEJANDRA MEDINA VILLAMIL" data-role="CONTEO PROMEDIO DE VISITANTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> EVELIN ALEJANDRA MEDINA VILLAMIL</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-amber-400">Tienda Caucana</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="OMAR GERARDO ARBOLEDA MUÑOZ" data-role="VENTAS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OMAR GERARDO ARBOLEDA MUÑOZ</button>
+                            <button onclick="showPersonRole(this)" data-name="JOHN JAIRO COLLAZOS PINZÓN" data-role="INVENTARIO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOHN JAIRO COLLAZOS PINZÓN</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-indigo-400">Mega Carpa Empresas</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MONICA HORMIGA" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MONICA HORMIGA</button>
+                            <button onclick="showPersonRole(this)" data-name="LUIS ANGEL ACOSTA ORTEGA" data-role="IMPULSADORES EXTERNOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS ANGEL ACOSTA ORTEGA</button>
+                            <button onclick="showPersonRole(this)" data-name="HAROL MAURICIO MUÑOZ CHAMORRO" data-role="ATENCIÓN STANDS E IMPUSLADOR INTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> HAROL MAURICIO MUÑOZ CHAMORRO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-teal-400">Picnic y Emprendimientos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="ANGIE PAOLA MOSQUERA ARTUNDUAGA" data-role="ZONA PICNIC" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> ANGIE PAOLA MOSQUERA ARTUNDUAGA</button>
+                            <button onclick="showPersonRole(this)" data-name="JAVIER CAMILO PACHO OROZCO" data-role="STANDS CON MONTAJES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JAVIER CAMILO PACHO OROZCO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-fuchsia-400">Patrocinadores</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="FRANCISCO JOSE IDROBO IDROBO" data-role="ATENCIÓN STANDS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> FRANCISCO JOSE IDROBO IDROBO</button>
+                            <button onclick="showPersonRole(this)" data-name="LUIS ALFONSO FERNÁNDEZ BURBANO" data-role="IMPUSLADOR EXTERNO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LUIS ALFONSO FERNÁNDEZ BURBANO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-emerald-400">Pabellón Gastronómico</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JOSE FERNANDO SALDAÑA MOSQUERA" data-role="ORGANIZADOR DE ATENCIÓN DE CLIENTES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSE FERNANDO SALDAÑA MOSQUERA</button>
+                            <button onclick="showPersonRole(this)" data-name="KATHERINE MUÑOZ VELASCO" data-role="ORGANIZADOR COMEDORES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> KATHERINE MUÑOZ VELASCO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-lime-400">Comedores Externos</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="LILIANA KELINE BAMBAGÜÉ NAVIA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> LILIANA KELINE BAMBAGÜÉ NAVIA</button>
+                            <button onclick="showPersonRole(this)" data-name="JHON JAIRO LONDOÑO SILVA" data-role="ORGANIZADOR Y ATENCIÓN A USURIOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JHON JAIRO LONDOÑO SILVA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-pink-400">Zona Alt. / Infantil / Refrigerios</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="JOSE ALBERTO ENRIQUEZ ESPINOSA" data-role="REFRIGERIOS Y JUEGOS 1" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSE ALBERTO ENRIQUEZ ESPINOSA</button>
+                            <button onclick="showPersonRole(this)" data-name="SERGIO ANDRÉS MUÑOZ HOYOS" data-role="REFRIGERIOS Y ZONA DE COMIDAS ALTERNATIVA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> SERGIO ANDRÉS MUÑOZ HOYOS</button>
+                            <button onclick="showPersonRole(this)" data-name="JOSÉ JARVY BANGUERO MINA" data-role="REFRIGERIOS Y JUEGOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> JOSÉ JARVY BANGUERO MINA</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-violet-400">Tarima & Protocolo</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="OSCAR MANUEL CASTRILLON COBO" data-role="ORGANIZADOR DE INVITADOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> OSCAR MANUEL CASTRILLON COBO</button>
+                            <button onclick="showPersonRole(this)" data-name="DANIEL AICARDO GOMEZ AÑASCO" data-role="RESTRICCIÓN DE TARIMA" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DANIEL AICARDO GOMEZ AÑASCO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-rose-400">Publicidad Audiovisual</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="MIRIAM TERESA VIDAL CAMAYO" data-role="APOYO A ORGANIZACIÓN DE SHOWS ESPECIALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> MIRIAM TERESA VIDAL CAMAYO</button>
+                        </div></td></tr>
+                        <tr class="zone-row"><td class="font-bold text-slate-700 dark:text-orange-400">Vallas & Zona Baños</td><td><div class="flex flex-wrap gap-2">
+                            <button onclick="showPersonRole(this)" data-name="YULIANA LORENA SILVA MOSQUERA" data-role="VALLAS DE PARQUEADERO" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> YULIANA LORENA SILVA MOSQUERA</button>
+                            <button onclick="showPersonRole(this)" data-name="DORA ELIZABETH CERÓN PARRA" data-role="VALLAS FRONTALES" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DORA ELIZABETH CERÓN PARRA</button>
+                            <button onclick="showPersonRole(this)" data-name="DIDIER ALEXANDER CALDERON ROSERO" data-role="ORGANIZADOR ACCESO A BAÑOS" class="person-badge group"><i class="fa-solid fa-user-tag text-blue-500 group-hover:text-white"></i> DIDIER ALEXANDER CALDERON ROSERO</button>
+                        </div></td></tr>
+                    </tbody></table></div>
                 </section>
+
             </div>
         </div>
-
     </main>
 
-    <!-- MODAL: RESULTADOS -->
+    <!-- MODAL RESULTADOS BUSQUEDA -->
     <div id="searchModal" class="fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="bg-blue-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
@@ -359,74 +481,66 @@
         </div>
     </div>
 
-    <!-- MODAL: ROLES -->
+    <!-- MODAL ROLES (INFO) -->
     <div id="rolesModal" class="fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 w-11/12 max-w-2xl rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="bg-rose-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
-                <h3 class="font-bold text-lg"><i class="fa-solid fa-users-gear mr-2"></i> Descripción de Roles</h3>
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-users-gear mr-2"></i> Descripción de Zonas y Roles</h3>
                 <button onclick="closeModal('rolesModal')" class="hover:bg-rose-700 rounded-full w-8 h-8 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 max-h-[70vh] overflow-y-auto space-y-4">
-                <div class="border-l-4 border-blue-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
-                    <h4 class="font-bold text-blue-700 dark:text-blue-300 text-sm uppercase">Impulsador Externo</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Atraer activamente al público hacia el evento en puntos de ingreso.</p>
-                </div>
-                <div class="border-l-4 border-emerald-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
-                    <h4 class="font-bold text-emerald-700 dark:text-emerald-300 text-sm uppercase">Impulsador Interno / Logística</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Atención al público, promoción de stands y limpieza.</p>
-                </div>
-                <div class="border-l-4 border-violet-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
-                    <h4 class="font-bold text-violet-700 dark:text-violet-300 text-sm uppercase">Protocolo / Tarima</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Manejo de agenda, artistas e invitados especiales.</p>
-                </div>
-                <div class="border-l-4 border-red-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded">
-                    <h4 class="font-bold text-red-700 dark:text-red-300 text-sm uppercase">Seguridad</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Control de evacuación y PMU.</p>
-                </div>
+                <div class="border-l-4 border-blue-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-blue-700 dark:text-blue-300 text-sm uppercase">Ingreso & Registro</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">2 Atención a usuarios, 1 Conteo promedio.</p></div>
+                <div class="border-l-4 border-amber-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-amber-700 dark:text-amber-300 text-sm uppercase">Tienda Caucana</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Ventas e Inventario.</p></div>
+                <div class="border-l-4 border-indigo-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-indigo-700 dark:text-indigo-300 text-sm uppercase">Mega Carpa Empresas</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">2 Impulsadores Externos, 1 Atención Stands/Impulsador Interno.</p></div>
+                <div class="border-l-4 border-teal-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-teal-700 dark:text-teal-300 text-sm uppercase">Picnic y Emprendimientos</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Zona Picnic y Stands con Montajes.</p></div>
+                <div class="border-l-4 border-fuchsia-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-fuchsia-700 dark:text-fuchsia-300 text-sm uppercase">Patrocinadores</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Atención Stands e Impulsador Externo.</p></div>
+                <div class="border-l-4 border-emerald-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-emerald-700 dark:text-emerald-300 text-sm uppercase">Pabellón Gastronómico</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Organizador de Atención de Clientes, Organizador Comedores.</p></div>
+                <div class="border-l-4 border-pink-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-pink-700 dark:text-pink-300 text-sm uppercase">Infantil / Refrigerios</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Refrigerios y Juegos, Zona Comidas Alternativa.</p></div>
+                <div class="border-l-4 border-violet-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-violet-700 dark:text-violet-300 text-sm uppercase">Tarima & Protocolo</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Organización de invitados y restricción de tarima.</p></div>
+                <div class="border-l-4 border-orange-500 bg-slate-50 dark:bg-slate-700/50 p-3 rounded"><h4 class="font-bold text-orange-700 dark:text-orange-300 text-sm uppercase">Vallas & Baños</h4><p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Vallas parqueadero, frontales y organizador baños.</p></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- INICIALIZACIÓN ---
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- INTERACCIÓN ---
+        function showPersonRole(btn) {
+            const name = btn.getAttribute('data-name');
+            const role = btn.getAttribute('data-role');
             Swal.fire({
-                title: 'Aviso Importante',
-                text: 'Si el horario asignado no es de su conformidad, por favor coordine su reemplazo internamente.',
+                title: `<span class="text-lg font-bold text-blue-600">${name}</span>`,
+                html: `<p class="text-slate-600 dark:text-slate-300">Rol asignado:</p><h3 class="text-xl font-black uppercase mt-2 dark:text-white">${role}</h3>`,
                 icon: 'info',
-                confirmButtonText: 'Entendido',
+                confirmButtonText: 'Cerrar',
                 confirmButtonColor: '#2563eb',
                 background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
                 color: document.documentElement.classList.contains('dark') ? '#fff' : '#334155'
             });
-            checkTheme();
-        });
+        }
 
-        // --- BUSCADOR ---
         function handleSearch(e) { if(e.key === 'Enter') searchPerson(); }
 
         function searchPerson() {
             const query = document.getElementById('globalSearch').value.trim().toLowerCase();
             if(!query) return;
 
-            const rows = document.querySelectorAll('.search-scope tr');
+            const rows = document.querySelectorAll('.zone-row'); 
             const results = [];
 
             rows.forEach(row => {
                 const zona = row.children[0].textContent;
-                const encargadosCell = row.querySelector('.person-name').textContent;
-                const parentBody = row.parentElement;
-                const day = parentBody.getAttribute('data-day');
-                const shift = parentBody.getAttribute('data-shift');
+                const buttons = row.querySelectorAll('button');
+                const parentTable = row.closest('tbody');
+                const day = parentTable.getAttribute('data-day');
+                const shift = parentTable.getAttribute('data-shift');
 
-                const names = encargadosCell.split(',').map(n => n.trim());
-                const match = names.some(name => name.toLowerCase().includes(query));
-
-                if(match) {
-                    results.push({ day, shift, zona, matchName: encargadosCell });
-                }
+                buttons.forEach(btn => {
+                    const name = btn.getAttribute('data-name');
+                    if (name.toLowerCase().includes(query)) {
+                         results.push({ day, shift, zona, matchName: name });
+                    }
+                });
             });
-
             displayResults(results, query);
         }
 
@@ -438,14 +552,16 @@
             } else {
                 results.forEach(res => {
                     const item = document.createElement('div');
-                    item.className = "bg-slate-50 dark:bg-slate-700 p-3 rounded-lg mb-3 border border-slate-200 dark:border-slate-600";
+                    item.className = "bg-slate-50 dark:bg-slate-700 p-3 rounded-lg mb-3 border border-slate-200 dark:border-slate-600 shadow-sm";
                     item.innerHTML = `
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="text-xs font-bold text-white bg-blue-500 px-2 py-0.5 rounded">${res.day}</span>
-                            <span class="text-xs font-bold text-slate-500 dark:text-slate-300">${res.shift}</span>
+                        <div class="flex justify-between items-center mb-2 border-b border-slate-200 dark:border-slate-600 pb-2">
+                            <span class="text-[10px] font-black tracking-wider uppercase text-white bg-blue-600 px-2 py-1 rounded">${res.day}</span>
+                            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase">${res.shift}</span>
                         </div>
-                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">${res.zona}</h4>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800 p-1 rounded border border-slate-100 dark:border-slate-600 mt-2">${res.matchName}</p>
+                        <h4 class="font-bold text-slate-800 dark:text-white text-sm mb-1">${res.zona}</h4>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                             <i class="fa-solid fa-user"></i> ${res.matchName}
+                        </p>
                     `;
                     list.appendChild(item);
                 });
@@ -453,56 +569,36 @@
             openModal('searchModal');
         }
 
-        // --- TABS & MODALS ---
+        // Funciones de Tabs y Modales
         function showTab(day) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById('content-' + day).classList.remove('hidden');
             document.getElementById('tab-' + day).classList.add('active');
         }
-
         function openModal(id) {
             const modal = document.getElementById(id);
             const content = modal.querySelector('div');
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95'); content.classList.add('scale-100');
-            }, 10);
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
         }
-
         function closeModal(id) {
             const modal = document.getElementById(id);
             const content = modal.querySelector('div');
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100'); content.classList.add('scale-95');
+            modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95');
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
-
-        // --- DESCARGA ---
         function downloadSchedule() {
             const activeTab = document.querySelector('.tab-content:not(.hidden)');
             if(!activeTab) return;
             const element = document.getElementById('capture-area');
-            
-            Swal.fire({
-                title: 'Generando Imagen...', text: 'Por favor espere',
-                didOpen: () => Swal.showLoading(), allowOutsideClick: false
-            });
-
-            html2canvas(element, {
-                backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
-                scale: 2
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'Programacion_2025.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                Swal.close();
+            Swal.fire({ title: 'Generando Imagen...', text: 'Por favor espere', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+            html2canvas(element, { backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff', scale: 2 }).then(canvas => {
+                const link = document.createElement('a'); link.download = 'Programacion_CaucaFestival.png'; link.href = canvas.toDataURL('image/png'); link.click(); Swal.close();
             });
         }
-
-        // --- TEMA ---
+        
+        // Tema
         const themeIcon = document.getElementById('theme-icon');
         const htmlElement = document.documentElement;
         function checkTheme() {
@@ -517,6 +613,15 @@
                 htmlElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
         }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            checkTheme();
+            const Toast = Swal.mixin({
+                toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
+            });
+            Toast.fire({ icon: 'success', title: 'Programación cargada exitosamente' });
+        });
     </script>
 </body>
 </html>
