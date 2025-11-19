@@ -536,8 +536,10 @@
 
                 buttons.forEach(btn => {
                     const name = btn.getAttribute('data-name');
+                    const role = btn.getAttribute('data-role'); // Captura el Rol
                     if (name.toLowerCase().includes(query)) {
-                         results.push({ day, shift, zona, matchName: name });
+                         // Añade el rol al objeto de resultados
+                         results.push({ day, shift, zona, matchName: name, role: role });
                     }
                 });
             });
@@ -558,9 +560,15 @@
                             <span class="text-[10px] font-black tracking-wider uppercase text-white bg-blue-600 px-2 py-1 rounded">${res.day}</span>
                             <span class="text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase">${res.shift}</span>
                         </div>
-                        <h4 class="font-bold text-slate-800 dark:text-white text-sm mb-1">${res.zona}</h4>
-                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                             <i class="fa-solid fa-user"></i> ${res.matchName}
+                        <h4 class="font-bold text-slate-800 dark:text-white text-sm mb-2">${res.zona}</h4>
+                        
+                        <!-- NOMBRE Y BADGE CON ROL -->
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 flex flex-wrap items-center gap-2">
+                             <i class="fa-solid fa-user"></i> 
+                             <span>${res.matchName}</span>
+                             <span class="text-[10px] bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-200 px-2 py-0.5 rounded-full uppercase">
+                                ${res.role}
+                             </span>
                         </p>
                     `;
                     list.appendChild(item);
